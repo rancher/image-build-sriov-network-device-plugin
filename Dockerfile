@@ -20,4 +20,4 @@ FROM ${UBI_IMAGE}
 WORKDIR /
 COPY --from=builder /go/sriov-network-device-plugin/build/sriovdp /usr/bin/
 COPY --from=builder /go/sriov-network-device-plugin/images/entrypoint.sh /
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
