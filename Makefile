@@ -22,7 +22,7 @@ image-build:
 
 .PHONY: image-push
 image-push:
-	docker push $(ORG)/ihardened-sriov-network-device-plugin:$(TAG)-$(ARCH)
+	docker push $(ORG)/hardened-sriov-network-device-plugin:$(TAG)-$(ARCH)
 
 .PHONY: image-manifest
 image-manifest:
