@@ -18,6 +18,8 @@ RUN make clean && make build
 # Create the sriov-network-device-plugin image
 FROM ${UBI_IMAGE}
 WORKDIR /
+RUN microdnf update -y && \
+    microdnf install hwdata
 COPY --from=builder /go/sriov-network-device-plugin/build/sriovdp /usr/bin/
 COPY --from=builder /go/sriov-network-device-plugin/images/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
