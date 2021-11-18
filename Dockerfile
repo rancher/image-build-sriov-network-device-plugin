@@ -1,7 +1,7 @@
 # last commit on 2021-10-06
 ARG TAG="441e06f11bfafcf5f818975298943537a103b5a8"
 ARG UBI_IMAGE=registry.access.redhat.com/ubi7/ubi-minimal:latest
-ARG GO_IMAGE=rancher/hardened-build-base:v1.16.9b7
+ARG GO_IMAGE=rancher/hardened-build-base:v1.16.10b7
 
 # Build the project
 FROM ${GO_IMAGE} as builder
