@@ -7,12 +7,11 @@ endif
 BUILD_META=-build$(shell date +%Y%m%d)
 ORG ?= rancher
 # last commit on 2021-10-06
-TAG ?= 441e06f11bfafcf5f818975298943537a103b5a8$(BUILD_META)
+TAG ?= v3.4.0$(BUILD_META)
 
-# Temporarily disable this as Github tags can't be a SHA (too long)
-#ifneq ($(DRONE_TAG),)
-#TAG := $(DRONE_TAG)
-#endif
+ifneq ($(DRONE_TAG),)
+TAG := $(DRONE_TAG)
+endif
 
 ifeq (,$(filter %$(BUILD_META),$(TAG)))
 $(error TAG needs to end with build metadata: $(BUILD_META))
