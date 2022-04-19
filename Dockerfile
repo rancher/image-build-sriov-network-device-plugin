@@ -1,7 +1,6 @@
-# last commit on 2021-10-06
-ARG TAG="441e06f11bfafcf5f818975298943537a103b5a8"
+ARG TAG="v3.4.0"
 ARG UBI_IMAGE=registry.access.redhat.com/ubi7/ubi-minimal:latest
-ARG GO_IMAGE=rancher/hardened-build-base:v1.16.10b7
+ARG GO_IMAGE=rancher/hardened-build-base:v1.18.1b7
 
 # Build the project
 FROM ${GO_IMAGE} as builder
@@ -13,7 +12,7 @@ ARG TAG
 RUN git clone https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 WORKDIR sriov-network-device-plugin
 RUN git fetch --all --tags --prune
-RUN git checkout ${TAG}
+RUN git checkout tags/${TAG} -b ${TAG}
 RUN make clean && make build
 
 # Create the sriov-network-device-plugin image
