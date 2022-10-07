@@ -18,7 +18,10 @@ RUN make clean && make build
 # Create the sriov-network-device-plugin image
 FROM ${BCI_IMAGE}
 WORKDIR /
-RUN zypper install -y hwdata
+RUN zypper refresh && \
+    zypper update -y && \
+    zypper install -y hwdata gawk which && \
+    zypper clean -a
 COPY --from=builder /go/sriov-network-device-plugin/build/sriovdp /usr/bin/
 COPY --from=builder /go/sriov-network-device-plugin/images/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
