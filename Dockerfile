@@ -1,6 +1,6 @@
 ARG TAG="v3.5.1"
 ARG BCI_IMAGE=registry.suse.com/bci/bci-base:latest
-ARG GO_IMAGE=rancher/hardened-build-base:v1.20.4b11
+ARG GO_IMAGE=rancher/hardened-build-base:v1.20.7b3
 
 # Build the project
 FROM ${GO_IMAGE} as builder
