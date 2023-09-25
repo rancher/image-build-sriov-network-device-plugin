@@ -37,14 +37,6 @@ image-build:
 image-push:
 	docker push $(ORG)/hardened-sriov-network-device-plugin:$(TAG)-$(ARCH)
 
-.PHONY: image-manifest
-image-manifest:
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest create --amend \
-		$(ORG)/hardened-sriov-network-device-plugin:$(TAG) \
-		$(ORG)/hardened-sriov-network-device-plugin:$(TAG)-$(ARCH)
-	DOCKER_CLI_EXPERIMENTAL=enabled docker manifest push \
-		$(ORG)/hardened-sriov-network-device-plugin:$(TAG)
-
 .PHONY: image-scan
 image-scan:
 	trivy image --severity $(SEVERITIES) --no-progress --ignore-unfixed $(ORG)/hardened-sriov-network-device-plugin:$(TAG)
