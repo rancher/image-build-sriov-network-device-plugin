@@ -1,0 +1,95 @@
+From 5ae8dbd941881264a326921a9b4baf19a8b74943 Mon Sep 17 00:00:00 2001
+From: Manuel Buil <mbuil@suse.com>
+Date: Mon, 18 Mar 2024 12:27:35 +0100
+Subject: [PATCH] Adding extra logging
+
+Signed-off-by: Manuel Buil <mbuil@suse.com>
+---
+ cmd/sriovdp/main.go                |  1 +
+ pkg/factory/factory.go             |  4 ++++
+ pkg/netdevice/netDeviceProvider.go | 15 +++++++++++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/cmd/sriovdp/main.go b/cmd/sriovdp/main.go
+index 93998c47..baaca332 100644
+--- a/cmd/sriovdp/main.go
++++ b/cmd/sriovdp/main.go
+@@ -41,6 +41,7 @@ func main() {
+ 	cp := &cliParams{}
+ 	flagInit(cp)
+ 	flag.Parse()
++	glog.Infof("EXTRALOGS - This is the config file loaded from cm device-plugin-config: %v", cp.configFile)
+ 	rm := newResourceManager(cp)
+ 
+ 	glog.Infof("resource manager reading configs")
+diff --git a/pkg/factory/factory.go b/pkg/factory/factory.go
+index 15a28765..e724e011 100644
+--- a/pkg/factory/factory.go
++++ b/pkg/factory/factory.go
+@@ -107,7 +107,11 @@ func (rf *resourceFactory) GetSelector(attr string, values []string) (types.Devi
+ }
+ 
+ func (rf *resourceFactory) FilterBySelector(selectorName string, values []string, devicesToFilter []types.HostDevice) []types.HostDevice {
++	for ind, dev := range devicesToFilter {
++		glog.Infof("EXTRALOGS - Before Filtering by %s. DeviceToFilter %d has: %v/%v/%v/%v", selectorName, ind, dev.GetVendor(), dev.GetDriver(), dev.GetDeviceID(), dev.GetDeviceCode())
++	}
+ 	if len(values) > 0 {
++		glog.Infof("EXTRALOGS - There are some values to filter against, which are: %v", values)
+ 		if selector, err := rf.GetSelector(selectorName, values); err == nil {
+ 			return selector.Filter(devicesToFilter)
+ 		}
+diff --git a/pkg/netdevice/netDeviceProvider.go b/pkg/netdevice/netDeviceProvider.go
+index 4d3d15b8..635f0d48 100644
+--- a/pkg/netdevice/netDeviceProvider.go
++++ b/pkg/netdevice/netDeviceProvider.go
+@@ -15,6 +15,7 @@
+ package netdevice
+ 
+ import (
++	"encoding/json"
+ 	"fmt"
+ 
+ 	"github.com/golang/glog"
+@@ -95,13 +96,17 @@ func (np *netDeviceProvider) GetFilteredDevices(devices []types.HostDevice,
+ 
+ 	rf := np.rFactory
+ 
++	selectorsLogging(rc)
++
+ 	// filter by vendor list
+ 	filteredDevice = rf.FilterBySelector("vendors", nf.Vendors, filteredDevice)
+ 
+ 	// filter by device list
++	glog.Infof("EXTRALOGS - Detected devices by device-plugin-config: %+v", nf.Devices)
+ 	filteredDevice = rf.FilterBySelector("devices", nf.Devices, filteredDevice)
+ 
+ 	// filter by driver list
++	glog.Infof("EXTRALOGS - Detected drivers by device-plugin-config: %+v", nf.Drivers)
+ 	filteredDevice = rf.FilterBySelector("drivers", nf.Drivers, filteredDevice)
+ 
+ 	// filter by pciAddresses list
+@@ -111,6 +116,7 @@ func (np *netDeviceProvider) GetFilteredDevices(devices []types.HostDevice,
+ 	filteredDevice = rf.FilterBySelector("acpiIndexes", nf.AcpiIndexes, filteredDevice)
+ 
+ 	// filter by PfNames list
++	glog.Infof("EXTRALOGS - PfNames: %+v", nf.PfNames)
+ 	filteredDevice = rf.FilterBySelector("pfNames", nf.PfNames, filteredDevice)
+ 
+ 	// filter by RootDevices list
+@@ -172,3 +178,12 @@ func (np *netDeviceProvider) ValidConfig(rc *types.ResourceConfig) bool {
+ 	}
+ 	return true
+ }
++
++func selectorsLogging(rc *types.ResourceConfig) {
++	var selectors map[string]interface{}
++	err := json.Unmarshal(*rc.Selectors, &selectors)
++	if err != nil {
++		glog.Errorf("Error unmarshalling selectors for logging: %v", err)
++	}
++	glog.Infof("EXTRALOGS - This is rc: %+v and these are selectors: %+v", rc, selectors)
++}
+\ No newline at end of file
+-- 
+2.35.3
+
