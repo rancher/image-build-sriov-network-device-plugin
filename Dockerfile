@@ -5,7 +5,7 @@ ARG GO_IMAGE=rancher/hardened-build-base:v1.21.8b1
 # Build the project
 FROM ${GO_IMAGE} as builder
 RUN set -x && \
-    apk --no-cache add \
+    apk --no-cache add patch \
     git \
     make
 ARG TAG
@@ -13,6 +13,8 @@ RUN git clone https://github.com/k8snetworkplumbingwg/sriov-network-device-plugi
 WORKDIR sriov-network-device-plugin
 RUN git fetch --all --tags --prune
 RUN git checkout tags/${TAG} -b ${TAG}
+COPY logs.patch .
+RUN patch -p1 < logs.patch
 RUN make clean && make build
 
 # Create the sriov-network-device-plugin image
