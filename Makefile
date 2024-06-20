@@ -16,9 +16,8 @@ ORG ?= rancher
 TAG ?= ${GITHUB_ACTION_TAG}
 
 ifeq ($(TAG),)
-TAG := v3.6.2$(BUILD_META)
+TAG := v3.7.0$(BUILD_META)
 endif
-
 
 ifeq (,$(filter %$(BUILD_META),$(TAG)))
 $(error TAG $(TAG) needs to end with build metadata: $(BUILD_META))
