@@ -14,7 +14,8 @@ RUN git fetch --all --tags --prune
 RUN git checkout tags/${TAG} -b ${TAG}
 COPY logs.patch .
 RUN patch -p1 < logs.patch
-RUN make clean && make build
+RUN make clean && \
+    make STATIC=1 build
 
 # Create the sriov-network-device-plugin image
 FROM ${BCI_IMAGE}
