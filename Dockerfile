@@ -2,7 +2,7 @@ ARG BCI_IMAGE=registry.suse.com/bci/bci-base:latest
 ARG GO_IMAGE=rancher/hardened-build-base:v1.22.8b2
 
 # Build the project
-FROM ${GO_IMAGE} as builder
+FROM ${GO_IMAGE} AS builder
 RUN set -x && \
     apk --no-cache add patch \
     git \
