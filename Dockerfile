@@ -7,7 +7,7 @@ RUN set -x && \
     apk --no-cache add patch \
     git \
     make
-ARG TAG=v3.8.0
+ARG TAG=v3.9.0
 RUN git clone https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 WORKDIR /go/sriov-network-device-plugin
 RUN git fetch --all --tags --prune
