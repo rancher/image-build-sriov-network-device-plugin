@@ -1,5 +1,5 @@
 ARG BCI_IMAGE=registry.suse.com/bci/bci-base:latest
-ARG GO_IMAGE=rancher/hardened-build-base:v1.23.5b1
+ARG GO_IMAGE=rancher/hardened-build-base:v1.23.6b1
 
 # Build the project
 FROM ${GO_IMAGE} AS builder
